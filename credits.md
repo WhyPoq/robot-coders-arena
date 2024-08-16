@@ -1,0 +1,2 @@
+-   [**Robot models**](https://sketchfab.com/3d-models/lowpoly-robots-7181d9e5ba434aa59dc7b9042c9723df) by Satendra Saraswat is licensed under a [CC BY 4.0 licence](https://creativecommons.org/licenses/by/4.0/). The scene with 3 robots was split into 3 searate files with 1 robot in each
+-   Idea for the game mechanics from [Jabrils](https://www.youtube.com/@Jabrils) [youtube video](https://www.youtube.com/watch?v=DGZs2xREwSU)
