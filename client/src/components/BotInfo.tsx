@@ -57,9 +57,9 @@ const BotInfo = ({ side, show, botStats, name, shape }: BotInfoProps) => {
 			</div>
 			<div className="flex items-center gap-3 font-semibold text-xl pointer-events-auto">
 				<div style={{ order: side === "left" ? 0 : 1 }}>
-					<img className="h-full" src={swordsIcon} alt="Attack" />
+					<img className="h-full" src={swordsIcon} alt="Strength" />
 				</div>
-				<div>{botStats.attack}</div>
+				<div>{botStats.strength}</div>
 			</div>
 		</div>
 	);

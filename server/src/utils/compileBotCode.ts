@@ -14,7 +14,7 @@ interface CompileResultFail {
 type CompileResult = CompileResultSuccess | CompileResultFail;
 
 function compileBotCode(code: string): CompileResult {
-	code = code.replace(/console\.log\((.*)\)/g, "__output.push($1)");
+	code = code.replace(/console\.log\((.*)\)/g, "__output.push(JSON.stringify($1))");
 
 	try {
 		const context: { fn: Function | undefined; __output: string[] } = {

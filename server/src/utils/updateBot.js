@@ -10,7 +10,7 @@ function updateBot(botMove, enemyMove, playerStats, enemyStats) {
         enemyMove = RobotAction_1.RobotAction.Idle;
     if (botMove === RobotAction_1.RobotAction.Attack) {
         if (enemyMove === RobotAction_1.RobotAction.Attack) {
-            playerStats.health -= enemyStats.attack;
+            playerStats.health -= enemyStats.strength;
         }
         else if (enemyMove === RobotAction_1.RobotAction.Block) {
             playerStats.health -= 1;
@@ -19,20 +19,20 @@ function updateBot(botMove, enemyMove, playerStats, enemyStats) {
     }
     else if (botMove === RobotAction_1.RobotAction.Block) {
         if (enemyMove === RobotAction_1.RobotAction.Attack) {
-            playerStats.health -= Math.floor(enemyStats.attack / 3);
+            playerStats.health -= Math.floor(enemyStats.strength / 3);
         }
     }
     else if (botMove === RobotAction_1.RobotAction.Upgrade) {
         if (enemyMove === RobotAction_1.RobotAction.Attack) {
-            playerStats.health -= enemyStats.attack * 2;
+            playerStats.health -= enemyStats.strength * 2;
         }
         else {
-            playerStats.attack += 1;
+            playerStats.strength += 1;
         }
     }
     else if (botMove === RobotAction_1.RobotAction.Idle) {
         if (enemyMove === RobotAction_1.RobotAction.Attack) {
-            playerStats.health -= enemyStats.attack * 2;
+            playerStats.health -= enemyStats.strength * 2;
         }
     }
     return botMove;

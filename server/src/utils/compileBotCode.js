@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const vm_1 = __importDefault(require("vm"));
 function compileBotCode(code) {
-    code = code.replace(/console\.log\((.*)\)/g, "__output.push($1)");
+    code = code.replace(/console\.log\((.*)\)/g, "__output.push(JSON.stringify($1))");
     try {
         const context = {
             fn: undefined,

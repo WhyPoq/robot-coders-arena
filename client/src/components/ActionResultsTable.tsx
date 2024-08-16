@@ -28,17 +28,17 @@ const ActionResultsTable = () => {
 					<td className="border-b border-l p-2">
 						<p>
 							<span className="text-blue-500">You get:</span>{" "}
-							<span className="text-vscode-cyan italic">enemy_attack</span> damage
+							<span className="text-vscode-cyan italic">enemy_strength</span> damage
 						</p>
 						<p>
 							<span className="text-red-500">Enemy get:</span>{" "}
-							<span className="text-vscode-cyan italic">your_attack</span> damage
+							<span className="text-vscode-cyan italic">your_strength</span> damage
 						</p>
 					</td>
 					<td className="border-b border-l p-2">
 						<p>
 							<span className="text-blue-500">You get:</span> (
-							<span className="text-vscode-cyan italic">enemy_attack</span> / 3)
+							<span className="text-vscode-cyan italic">enemy_strength</span> / 3)
 							rounded down damage
 						</p>
 						<p>
@@ -49,7 +49,7 @@ const ActionResultsTable = () => {
 					<td className="border-b border-l border-r p-2">
 						<p>
 							<span className="text-blue-500">You get:</span> (2 *{" "}
-							<span className="text-vscode-cyan italic">enemy_attack</span>) damage
+							<span className="text-vscode-cyan italic">enemy_strength</span>) damage
 						</p>
 						<p>
 							<span className="text-red-500">Enemy get:</span> -
@@ -68,7 +68,7 @@ const ActionResultsTable = () => {
 						</p>
 						<p>
 							<span className="text-red-500">Enemy get:</span> (
-							<span className="text-vscode-cyan italic">your_attack</span> / 3)
+							<span className="text-vscode-cyan italic">your_strength</span> / 3)
 							rounded down damage
 						</p>
 					</td>
@@ -82,7 +82,7 @@ const ActionResultsTable = () => {
 					</td>
 					<td className="border-b border-l border-r p-2">
 						<p>
-							<span className="text-blue-500">You get:</span> 1 attack
+							<span className="text-blue-500">You get:</span> 1 strength
 						</p>
 						<p>
 							<span className="text-red-500">Enemy get:</span> -
@@ -99,7 +99,7 @@ const ActionResultsTable = () => {
 						</p>
 						<p>
 							<span className="text-red-500">Enemy get:</span> (2 *{" "}
-							<span className="text-vscode-cyan italic">your_attack</span>) damage
+							<span className="text-vscode-cyan italic">your_strength</span>) damage
 						</p>
 					</td>
 					<td className="border-b border-l p-2">
@@ -107,15 +107,15 @@ const ActionResultsTable = () => {
 							<span className="text-blue-500">You get:</span> -
 						</p>
 						<p>
-							<span className="text-red-500">Enemy get:</span> 1 attack
+							<span className="text-red-500">Enemy get:</span> 1 strength
 						</p>
 					</td>
 					<td className="border-b border-l border-r p-2">
 						<p>
-							<span className="text-blue-500">You get:</span> 1 attack
+							<span className="text-blue-500">You get:</span> 1 strength
 						</p>
 						<p>
-							<span className="text-red-500">Enemy get:</span> 1 attack
+							<span className="text-red-500">Enemy get:</span> 1 strength
 						</p>
 					</td>
 				</tr>
