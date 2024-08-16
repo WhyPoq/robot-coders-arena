@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.monaco-editor .scroll-decoration {
+	display: none; /* hide shadow at the top of the editor when scrolled down */
+}
+
+.custom-scrollbar {
+	scrollbar-color: rgba(191, 191, 191, 0.4) #1e1e1e;
+	scrollbar-width: thin;
+}
+
+.editor-black-background .monaco-editor {
+	--vscode-editor-background: #2e2e2e;
+	--vscode-editorGutter-background: #2e2e2e;
+}
+
+.editableArea--single-line,
+.editableArea--multi-line {
+	background-color: rgba(0, 0, 0, 0.3);
+	width: 100% !important;
+}
+
+.guide .highlight {
+	color: #3dc9b0;
+}
+
+.guide ul {
+	list-style-type: square;
+	list-style-position: inside;
+}
+
+.loading-spinner {
+	width: 36px;
+	padding: 4px;
+	aspect-ratio: 1;
+	border-radius: 50%;
+	background: #5f6368;
+	--_m: conic-gradient(#0000 10%, #000), linear-gradient(#000 0 0) content-box;
+	-webkit-mask: var(--_m);
+	mask: var(--_m);
+	-webkit-mask-composite: source-out;
+	mask-composite: subtract;
+	animation: l3 1s infinite linear;
+}
+@keyframes l3 {
+	to {
+		transform: rotate(1turn);
+	}
+}
+
+.sideways {
+	writing-mode: vertical-lr;
+	transform: rotate(180deg);
+	min-width: 30px;
+}

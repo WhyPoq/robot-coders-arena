@@ -1,0 +1,15 @@
+    // pick tactic
+	if(shortMemory[0] == 0)
+		shortMemory[0] = Math.floor(Math.random() * 2) + 1;
+	
+	if(shortMemory[0] == 1) {
+        let curMoveNum = shortMemory[1];
+		shortMemory[1]++;
+		return [BLOCK, UPGRADE, ATTACK][curMoveNum % 3];
+	}
+	else if(shortMemory[0] == 2){
+		if(enemyPrevMove == -1){
+			return BLOCK;
+		}
+		return enemyPrevMove;
+	}

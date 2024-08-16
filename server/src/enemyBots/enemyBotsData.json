@@ -1,0 +1,18 @@
+[
+    {
+        "descriptionFile": "level1Description.html",
+        "codeFile": "level1.txt"
+    },
+    {
+        "descriptionFile": "level2Description.html",
+        "codeFile": "level2.txt"
+    },
+    {
+        "descriptionFile": "level3Description.html",
+        "codeFile": "level3.txt"
+    },
+    {
+        "descriptionFile": "level4Description.html",
+        "codeFile": "level4.txt"
+    }
+]

@@ -1,0 +1,6 @@
+    let curMoveNumber = shortMemory[0];
+    shortMemory[0]++;
+    if(curMoveNumber % 2 == 0)
+        return ATTACK
+    else
+        return UPGRADE
