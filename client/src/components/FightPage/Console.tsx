@@ -1,13 +1,14 @@
 import Panel from "./Panel";
-import { useConsoleContext } from "../contexts/ConsoleContext";
+import { useConsoleContext } from "../../contexts/ConsoleContext";
 import { useEffect, useRef } from "react";
 
 interface ConsoleProps {
 	roundedDir: "left" | "right" | "all";
 	headingPos: "left" | "right";
+	className: string;
 }
 
-const Console = ({ roundedDir, headingPos }: ConsoleProps) => {
+const Console = ({ roundedDir, headingPos, className }: ConsoleProps) => {
 	let { lines } = useConsoleContext();
 	const divRef = useRef<HTMLDivElement>(null);
 
@@ -22,7 +23,12 @@ const Console = ({ roundedDir, headingPos }: ConsoleProps) => {
 	}, [lines]);
 
 	return (
-		<Panel tabsHeadings="Console" roundedDir={roundedDir} headingPos={headingPos}>
+		<Panel
+			tabsHeadings="Console"
+			roundedDir={roundedDir}
+			headingPos={headingPos}
+			className={className}
+		>
 			<div className="h-full p-2 pl-7 pr-0">
 				<div className="h-full relative">
 					<div

@@ -5,6 +5,7 @@ import getEnemyBotData from "./enemyBots/getEnemyBotData";
 import { startGame } from "./gameManager";
 import { RequestHandler } from "express";
 import { Request } from "express-serve-static-core";
+import { CurLevelRequest, extractCurLevel } from "./utils/extractCurLevel";
 
 function initSockets(httpServer: HttpServer, sessionMiddleware: RequestHandler, corsOptions: any) {
 	const socketIO = new Server(httpServer, {
@@ -16,15 +17,19 @@ function initSockets(httpServer: HttpServer, sessionMiddleware: RequestHandler, 
 	socketIO.on("connection", async (socket) => {
 		console.log(`user with id ${socket.id} connected`);
 		const req = socket.request as Request;
-		console.log("connected with level value", req.session.curLevel);
+
+		let newReq: CurLevelRequest;
+		try {
+			newReq = await extractCurLevel(req);
+		} catch (err) {
+			console.log(err);
+			socket.disconnect();
+			return;
+		}
 
 		let moveFn: Function | null = null;
 		let __output: string[] = [];
 		let enemyMoveFn: Function | null = null;
-
-		if (req.session.curLevel === undefined) {
-			req.session.curLevel = 0;
-		}
 
 		socket.on("startFight", async ({ code }: { code: string }) => {
 			const compileResult = compileBotCode(code);
@@ -32,7 +37,7 @@ function initSockets(httpServer: HttpServer, sessionMiddleware: RequestHandler, 
 				moveFn = compileResult.fn;
 				__output = compileResult.__output;
 
-				const enemyDataResult = await getEnemyBotData(req.session.curLevel!);
+				const enemyDataResult = await getEnemyBotData(newReq.curLevel);
 				if (enemyDataResult.result === "fail") {
 					return socket.emit("compileError", "Server error: " + enemyDataResult.message);
 				}
@@ -49,7 +54,7 @@ function initSockets(httpServer: HttpServer, sessionMiddleware: RequestHandler, 
 				enemyMoveFn = enemyCompileResult.fn;
 
 				socket.emit("compiledSuccessfully");
-				setTimeout(() => startGame(socket, moveFn!, __output, enemyMoveFn!, req), 1000);
+				setTimeout(() => startGame(socket, moveFn!, __output, enemyMoveFn!, newReq), 1000);
 			} else {
 				socket.emit("consoleLinesError", [compileResult.message]);
 				socket.emit("compileError", compileResult.message);

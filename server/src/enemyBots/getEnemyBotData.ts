@@ -6,6 +6,7 @@ interface getEnemyBotDataSuccess {
 	result: "success";
 	code: string;
 	description: string;
+	showCode: boolean;
 }
 
 interface getEnemyBotDataFail {
@@ -48,7 +49,7 @@ async function getEnemyBotData(level: number): Promise<getEnemyBotDataResult> {
 		return { result: "fail", statusCode: 500, message: "Error while reading bot desciption" };
 	}
 
-	return { result: "success", code, description };
+	return { result: "success", code, description, showCode: enemyBotsData[level].showCode };
 }
 
 export default getEnemyBotData;

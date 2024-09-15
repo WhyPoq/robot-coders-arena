@@ -1,11 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { socket } from "../socket";
-import Robots3d from "../components/Robots3d";
-import CodingUI from "../components/CodingUI";
-import FightControlBar from "../components/FightControlBar";
+import CodingUI from "../components/FightPage/CodingUI";
+import FightControlBar from "../components/FightPage/FightControlBar";
 import { useSceneContext } from "../contexts/SceneContext";
 import { RobotAction } from "../types/RobotAction";
-import FightUI from "../components/FightUI";
+import FightUI from "../components/FightPage/FightUI";
 import { useConsoleContext } from "../contexts/ConsoleContext";
 import ConsoleLine from "../types/ConsoleLine";
 import { BotStats, getResetBotStats } from "../types/BotStats";
@@ -16,6 +15,7 @@ import { useUpdateEnemyContext } from "../contexts/UpdateEnemyContext";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { normalPaceInterval } from "../constants";
 import { usePaceContext } from "../contexts/PaceContext";
+import useRobots3d from "../hooks/useRobots3d";
 
 const FightPage = () => {
 	const [isCodingPhase, setIsCodingPhase] = useState(true);
@@ -249,20 +249,16 @@ const FightPage = () => {
 		};
 	}, []);
 
+	useRobots3d(robot1Action, robot2Action, robotsTriggerActivated, setRobotsTriggerActivated);
+
 	return (
-		<div className="h-full bg-[#181818] text-white relative pb-4 overflow-hidden z-0 flex flex-col">
-			<Robots3d
-				robot1Action={robot1Action}
-				robot2Action={robot2Action}
-				triggerActivated={robotsTriggerActivated}
-				setTriggerActivated={setRobotsTriggerActivated}
-			/>
+		<div className="h-full text-white relative pb-4 overflow-hidden z-0 flex flex-col pointer-events-none no-pointer-events-children">
 			<FightControlBar
 				isCodingPhase={isCodingPhase}
 				toggleStartFight={toggleStartFight}
 				isPending={isPending}
 			/>
-			<div className="flex-grow pointer-events-none grid z-10">
+			<div className="flex-grow grid z-10">
 				<div className="col-start-1 row-start-1">
 					<CodingUI show={isCodingPhase} code={code} setCode={setCode} />
 				</div>

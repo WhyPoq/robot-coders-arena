@@ -41,7 +41,7 @@ function getEnemyBotData(level) {
             console.error(err);
             return { result: "fail", statusCode: 500, message: "Error while reading bot desciption" };
         }
-        return { result: "success", code, description };
+        return { result: "success", code, description, showCode: enemyBotsData_json_1.default[level].showCode };
     });
 }
 exports.default = getEnemyBotData;

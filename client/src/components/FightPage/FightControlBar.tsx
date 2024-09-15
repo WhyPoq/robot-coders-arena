@@ -1,9 +1,9 @@
-import playIcon from "../assets/play_circle_icon.svg";
-import stopIcon from "../assets/stop_circle_icon.svg";
+import playIcon from "../../assets/play_circle_icon.svg";
+import stopIcon from "../../assets/stop_circle_icon.svg";
 import NormalButton from "./NormalButton";
-import { socket } from "../socket";
-import { usePaceContext } from "../contexts/PaceContext";
-import { Pace } from "../types/Pace";
+import { socket } from "../../socket";
+import { usePaceContext } from "../../contexts/PaceContext";
+import { Pace } from "../../types/Pace";
 import { useEffect, useRef, useState } from "react";
 
 interface FightControlBarProps {
@@ -35,8 +35,8 @@ const FightControlBar = ({ isCodingPhase, toggleStartFight, isPending }: FightCo
 	}, [isPending, setShowPending]);
 
 	return (
-		<div className="flex justify-center h-10 mt-2">
-			<div className="flex items-center -translate-x-[80px]">
+		<div className="flex justify-center h-10 mt-2 no-pointer-events-current">
+			<div className="flex items-center -translate-x-[80px] no-pointer-events-current">
 				<div className="w-40 flex justify-end">
 					<NormalButton
 						size="small"

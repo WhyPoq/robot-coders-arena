@@ -1,22 +1,41 @@
-import { Router } from "express";
+import { Router, Request } from "express";
+import { extractCurLevel, CurLevelRequest } from "../utils/extractCurLevel";
 import getEnemyBotData from "../enemyBots/getEnemyBotData";
 
 const router = Router();
 
-router.get("/", async (req, res) => {
-	if (req.session.curLevel === undefined) {
-		req.session.curLevel = 0;
+router.get("/", async (req: Request, res) => {
+	let newReq: CurLevelRequest;
+	try {
+		newReq = await extractCurLevel(req);
+	} catch (err) {
+		console.log(err);
+		return res.status(500).send(String(err));
 	}
 
-	const enemyBotDataResult = await getEnemyBotData(req.session.curLevel);
+	const enemyBotDataResult = await getEnemyBotData(newReq.curLevel);
 	if (enemyBotDataResult.result === "fail") {
 		return res.status(enemyBotDataResult.statusCode).send(enemyBotDataResult.message);
 	}
-	res.send({ code: enemyBotDataResult.code, description: enemyBotDataResult.description });
+
+	if (!enemyBotDataResult.showCode) enemyBotDataResult.code = "";
+
+	res.send({
+		code: enemyBotDataResult.code,
+		description: enemyBotDataResult.description,
+		showCode: enemyBotDataResult.showCode,
+	});
 });
 
 router.get("/resetLevel", async (req, res) => {
-	req.session.curLevel = 0;
+	let newReq: CurLevelRequest;
+	try {
+		newReq = await extractCurLevel(req);
+	} catch (err) {
+		console.log(err);
+		return res.status(500).send(String(err));
+	}
+	newReq.setCurLevel(0);
 	res.sendStatus(204);
 });
 

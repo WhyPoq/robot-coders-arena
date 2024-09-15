@@ -3,7 +3,7 @@ import BotInfo from "./types/BotInfo";
 import updateBot from "./utils/updateBot";
 import BotStats from "./types/BotStats";
 import { RobotAction } from "./types/RobotAction";
-import { Request } from "express";
+import { CurLevelRequest } from "./utils/extractCurLevel";
 import enemyBotsData from "./enemyBots/enemyBotsData.json";
 
 const MAX_STEPS_COUNT = 100;
@@ -15,7 +15,7 @@ export async function startGame(
 	moveFn: Function,
 	__output: string[],
 	enemyMoveFn: Function,
-	req: Request
+	req: CurLevelRequest
 ) {
 	let gameStepInterval: NodeJS.Timeout | undefined = undefined;
 	const playerStats = new BotStats();
@@ -31,8 +31,6 @@ export async function startGame(
 	let stepsCount = 0;
 
 	let stepWaitTime = NORMAL_PACE_INTERVAL;
-
-	console.log("cur level", req.session.curLevel);
 
 	function changePace(newPace: "normal" | "fast") {
 		if (newPace === "normal") {
@@ -157,14 +155,14 @@ export async function startGame(
 
 	async function endGame(roundWinner: string) {
 		if (playerWins === 2) {
-			if (req.session.curLevel === undefined) {
-				req.session.curLevel = 0;
-			}
-
 			let completedAllLevels = false;
-			if (req.session.curLevel + 1 < enemyBotsData.length) {
-				req.session.curLevel++;
-				req.session.save();
+			if (req.curLevel < enemyBotsData.length) {
+				try {
+					await req.setCurLevel(req.curLevel + 1);
+				} catch (err) {
+					console.error(err);
+					socket.disconnect();
+				}
 			} else {
 				completedAllLevels = true;
 			}

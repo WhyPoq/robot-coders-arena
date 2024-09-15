@@ -33,7 +33,6 @@ function startGame(socket, moveFn, __output, enemyMoveFn, req) {
         let enemyWins = 0;
         let stepsCount = 0;
         let stepWaitTime = NORMAL_PACE_INTERVAL;
-        console.log("cur level", req.session.curLevel);
         function changePace(newPace) {
             if (newPace === "normal") {
                 stepWaitTime = NORMAL_PACE_INTERVAL;
@@ -139,13 +138,15 @@ function startGame(socket, moveFn, __output, enemyMoveFn, req) {
         function endGame(roundWinner) {
             return __awaiter(this, void 0, void 0, function* () {
                 if (playerWins === 2) {
-                    if (req.session.curLevel === undefined) {
-                        req.session.curLevel = 0;
-                    }
                     let completedAllLevels = false;
-                    if (req.session.curLevel + 1 < enemyBotsData_json_1.default.length) {
-                        req.session.curLevel++;
-                        req.session.save();
+                    if (req.curLevel < enemyBotsData_json_1.default.length) {
+                        try {
+                            yield req.setCurLevel(req.curLevel + 1);
+                        }
+                        catch (err) {
+                            console.error(err);
+                            socket.disconnect();
+                        }
                     }
                     else {
                         completedAllLevels = true;

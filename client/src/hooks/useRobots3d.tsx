@@ -1,5 +1,3 @@
-import { Canvas } from "@react-three/fiber";
-import RobotsScene from "./RobotsScene";
 import { RobotAction } from "../types/RobotAction";
 import { useSceneContext } from "../contexts/SceneContext";
 import { RobotAnimationType } from "../types/RobotAnimationType";
@@ -8,20 +6,12 @@ import { useBotStatsContext } from "../contexts/BotStatsContext";
 import { BotStats } from "../types/BotStats";
 import { normalPaceInterval } from "../constants";
 import { usePaceContext } from "../contexts/PaceContext";
-
-interface Robots3dProps {
-	robot1Action: RobotAction;
-	robot2Action: RobotAction;
-	triggerActivated: boolean;
-	setTriggerActivated: (newVal: boolean) => void;
-}
-
-const Robots3d = ({
-	robot1Action,
-	robot2Action,
-	triggerActivated,
-	setTriggerActivated,
-}: Robots3dProps) => {
+const useRobots3d = (
+	robot1Action: RobotAction,
+	robot2Action: RobotAction,
+	triggerActivated: boolean,
+	setTriggerActivated: (newVal: boolean) => void
+) => {
 	const {
 		setRobot1Animation,
 		setRobot2Animation,
@@ -125,14 +115,6 @@ const Robots3d = ({
 		playerStats,
 		playerStats,
 	]);
-
-	return (
-		<div className="absolute top-0 left-0 bottom-0 right-0 z-[-1] bg-[#151515]">
-			<Canvas camera={{ fov: 75, near: 0.1, far: 1000, position: [-2, 3, 3] }} shadows>
-				<RobotsScene />
-			</Canvas>
-		</div>
-	);
 };
 
-export default Robots3d;
+export default useRobots3d;

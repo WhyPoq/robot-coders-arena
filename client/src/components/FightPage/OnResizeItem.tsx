@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useFlexibleItemContext } from "../contexts/FlexibleItemContext";
+import { useFlexibleItemContext } from "../../contexts/FlexibleItemContext";
 
 interface OnResizeItemProps {
 	onResizeCallback: (portion: number) => any;

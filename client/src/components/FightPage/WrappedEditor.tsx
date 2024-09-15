@@ -2,7 +2,8 @@ import MonacoEditor from "@monaco-editor/react";
 import { EditorProps } from "@monaco-editor/react";
 import { useEffect, useRef, useState } from "react";
 import { editor } from "monaco-editor";
-import { addDefaultsFields } from "../utils/addDefaultFields";
+import { addDefaultsFields } from "../../utils/addDefaultFields";
+import handleEditorMount from "../../utils/handleEditorMount";
 
 interface WrappedEditorProps extends EditorProps {
 	className?: string;
@@ -26,7 +27,7 @@ const WrappedEditor = ({
 	}, [value, isEditorSet]);
 
 	addDefaultsFields(editorProps, {
-		defaultLanguage: "javascript",
+		defaultLanguage: "seclang",
 		defaultValue: "",
 		theme: "vs-dark",
 	});
@@ -63,6 +64,8 @@ const WrappedEditor = ({
 						if (editorProps.onChange) editorProps.onChange(value, ev);
 					}}
 					onMount={(editor, monaco) => {
+						handleEditorMount(editor, monaco);
+
 						const model = editor.getModel();
 						if (model !== null && setLineCount) {
 							setLineCount(model.getLineCount());

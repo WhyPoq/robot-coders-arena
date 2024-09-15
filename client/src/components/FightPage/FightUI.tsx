@@ -1,10 +1,10 @@
-import { useBotStatsContext } from "../contexts/BotStatsContext";
+import { useBotStatsContext } from "../../contexts/BotStatsContext";
 import BotInfo from "./BotInfo";
 import Console from "./Console";
 import RoundCounter from "./roundCounter/RoundCounter";
 import { useCallback, useEffect, useState } from "react";
-import { serverUrl } from "../constants";
-import { useUpdateEnemyContext } from "../contexts/UpdateEnemyContext";
+import { serverUrl } from "../../constants";
+import { useUpdateEnemyContext } from "../../contexts/UpdateEnemyContext";
 import NormalButton from "./NormalButton";
 
 interface FightUIProps {

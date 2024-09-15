@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { CameraControls, Grid, Environment } from "@react-three/drei";
 import RobotModel from "./RobotModel";
-import { useSceneContext } from "../contexts/SceneContext";
+import { useSceneContext } from "../../contexts/SceneContext";
 import { useEffect, useRef } from "react";
 
 const RobotsScene = () => {
@@ -43,13 +43,15 @@ const RobotsScene = () => {
 
 	return (
 		<>
+			<color attach="background" args={["#151515"]} />
+
 			{/* Camera */}
 			<CameraControls ref={cameraControlsRef} maxDistance={6} minDistance={1} />
 
 			{/* Lighting */}
-			<pointLight position={[0, 0, 0]} intensity={2} color="#e0ffff" />
+			<pointLight position={[0, 0, 0]} intensity={1} color="#d0ffff" />
 			<directionalLight position={[3, 4, 3]} castShadow />
-			<Environment preset="city" environmentIntensity={0.4} />
+			<Environment preset="city" environmentIntensity={0.8} />
 
 			{/* Grid */}
 			<Grid
@@ -83,7 +85,7 @@ const RobotsScene = () => {
 			</group>
 			<group position={[0.6, 0, 0]} rotation={[0, -Math.PI / 2, 0]}>
 				<RobotModel
-					modelPath="/robots/Robot1.fbx"
+					modelPath="/robots/Robot3.fbx"
 					activeAnim={robot2Animation}
 					defaultAnimation={robot2DefaultAnimation}
 					setActiveAnim={setRobot2Animation}

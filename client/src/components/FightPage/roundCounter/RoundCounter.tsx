@@ -1,6 +1,6 @@
-import { useGameScoreContext } from "../../contexts/GameScore";
+import { useGameScoreContext } from "../../../contexts/GameScore";
 import CounterDot from "./CounterDot";
-import { ShapePossibility } from "../../types/ShapePossibility";
+import { ShapePossibility } from "../../../types/ShapePossibility";
 
 interface BotInfoProps {
 	show: boolean;

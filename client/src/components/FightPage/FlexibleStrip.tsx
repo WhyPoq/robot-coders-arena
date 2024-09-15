@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { ReactNode } from "react";
-import { clamp } from "../utils/MathUtils";
-import { FlexibleItemContextProvider } from "../contexts/FlexibleItemContext";
-import { useFlexibleItemContext } from "../contexts/FlexibleItemContext";
+import { clamp } from "../../utils/MathUtils";
+import { FlexibleItemContextProvider } from "../../contexts/FlexibleItemContext";
+import { useFlexibleItemContext } from "../../contexts/FlexibleItemContext";
 
 interface FlexibleStripProps {
 	children: ReactNode;

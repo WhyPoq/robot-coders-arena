@@ -1,11 +1,11 @@
-import heartIcon from "../assets/heart_icon.svg";
-import swordsIcon from "../assets/swords_icon.svg";
-import squareIcon from "../assets/square.svg";
-import triangleIcon from "../assets/triangle.svg";
+import heartIcon from "../../assets/heart_icon.svg";
+import swordsIcon from "../../assets/swords_icon.svg";
+import squareIcon from "../../assets/square.svg";
+import triangleIcon from "../../assets/triangle.svg";
 
-import { BotStats, getResetBotStats } from "../types/BotStats";
+import { BotStats, getResetBotStats } from "../../types/BotStats";
 import FillBar from "./FillBar";
-import { maxBotHp } from "../constants";
+import { maxBotHp } from "../../constants";
 
 interface BotInfoProps {
 	side: "left" | "right";

@@ -1,7 +1,7 @@
-import squareIcon from "../../assets/square.svg";
-import triangleIcon from "../../assets/triangle.svg";
-import circleIcon from "../../assets/circle.svg";
-import { ShapePossibility } from "../../types/ShapePossibility";
+import squareIcon from "../../../assets/square.svg";
+import triangleIcon from "../../../assets/triangle.svg";
+import circleIcon from "../../../assets/circle.svg";
+import { ShapePossibility } from "../../../types/ShapePossibility";
 
 interface ConunterDotProps {
 	innerShape: ShapePossibility;

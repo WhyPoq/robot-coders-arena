@@ -13,20 +13,40 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
+const extractCurLevel_1 = require("../utils/extractCurLevel");
 const getEnemyBotData_1 = __importDefault(require("../enemyBots/getEnemyBotData"));
 const router = (0, express_1.Router)();
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (req.session.curLevel === undefined) {
-        req.session.curLevel = 0;
+    let newReq;
+    try {
+        newReq = yield (0, extractCurLevel_1.extractCurLevel)(req);
     }
-    const enemyBotDataResult = yield (0, getEnemyBotData_1.default)(req.session.curLevel);
+    catch (err) {
+        console.log(err);
+        return res.status(500).send(String(err));
+    }
+    const enemyBotDataResult = yield (0, getEnemyBotData_1.default)(newReq.curLevel);
     if (enemyBotDataResult.result === "fail") {
         return res.status(enemyBotDataResult.statusCode).send(enemyBotDataResult.message);
     }
-    res.send({ code: enemyBotDataResult.code, description: enemyBotDataResult.description });
+    if (!enemyBotDataResult.showCode)
+        enemyBotDataResult.code = "";
+    res.send({
+        code: enemyBotDataResult.code,
+        description: enemyBotDataResult.description,
+        showCode: enemyBotDataResult.showCode,
+    });
 }));
 router.get("/resetLevel", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    req.session.curLevel = 0;
+    let newReq;
+    try {
+        newReq = yield (0, extractCurLevel_1.extractCurLevel)(req);
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).send(String(err));
+    }
+    newReq.setCurLevel(0);
     res.sendStatus(204);
 }));
 exports.default = router;

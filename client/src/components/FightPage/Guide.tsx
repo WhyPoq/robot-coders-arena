@@ -1,16 +1,22 @@
-import { useEnemyInfoContext } from "../contexts/EnemyInfoContext";
+import { useEnemyInfoContext } from "../../contexts/EnemyInfoContext";
 import Panel from "./Panel";
 
 interface CodeEditorProps {
 	roundedDir: "left" | "right";
 	headingPos: "left" | "right";
+	className: string;
 }
 
-const Guide = ({ roundedDir, headingPos }: CodeEditorProps) => {
+const Guide = ({ roundedDir, headingPos, className }: CodeEditorProps) => {
 	const { description } = useEnemyInfoContext();
 
 	return (
-		<Panel tabsHeadings="Guide" roundedDir={roundedDir} headingPos={headingPos}>
+		<Panel
+			tabsHeadings="Guide"
+			roundedDir={roundedDir}
+			headingPos={headingPos}
+			className={className}
+		>
 			<div className="h-full p-2 pt-5 pl-7 pr-0">
 				<div className="h-full relative">
 					<div

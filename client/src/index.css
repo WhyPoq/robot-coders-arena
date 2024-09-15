@@ -55,3 +55,13 @@
 	transform: rotate(180deg);
 	min-width: 30px;
 }
+
+@layer base {
+	.no-pointer-events-children * {
+		pointer-events: none;
+	}
+
+	.pointer-events-children * {
+		pointer-events: auto;
+	}
+}

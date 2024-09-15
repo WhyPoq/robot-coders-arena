@@ -1,17 +1,19 @@
 import WrappedEditor from "./WrappedEditor";
 import Panel from "./Panel";
-import { useEffect } from "react";
-import { serverUrl } from "../constants";
-import { useUpdateEnemyContext } from "../contexts/UpdateEnemyContext";
-import { useEnemyInfoContext } from "../contexts/EnemyInfoContext";
+import { useEffect, useState } from "react";
+import { serverUrl } from "../../constants";
+import { useUpdateEnemyContext } from "../../contexts/UpdateEnemyContext";
+import { useEnemyInfoContext } from "../../contexts/EnemyInfoContext";
 
 interface CodeEditorProps {
 	roundedDir: "left" | "right";
 	headingPos: "left" | "right";
+	className: string;
 }
 
-const EnemyCode = ({ roundedDir, headingPos }: CodeEditorProps) => {
+const EnemyCode = ({ roundedDir, headingPos, className }: CodeEditorProps) => {
 	const { code, setCode, setDescription } = useEnemyInfoContext();
+	const [showCode, setShowCode] = useState(true);
 
 	const resultCode = `\
 const ATTACK = 1;
@@ -33,9 +35,11 @@ ${code}
 					const enemyBotData = (await response.json()) as {
 						code: string;
 						description: string;
+						showCode: boolean;
 					};
-					setCode(enemyBotData.code);
 					setDescription(enemyBotData.description);
+					if (enemyBotData.showCode) setCode(enemyBotData.code);
+					setShowCode(enemyBotData.showCode);
 				} else {
 					const errorMessage = await response.text();
 					throw `response status is ${response.status} (not okay): ${errorMessage}`;
@@ -49,18 +53,27 @@ ${code}
 	}, [updateDependency]);
 
 	return (
-		<Panel tabsHeadings="Enemy Bot Code" roundedDir={roundedDir} headingPos={headingPos}>
-			<WrappedEditor
-				value={resultCode}
-				options={{
-					readOnly: true,
-					readOnlyMessage: {
-						value: "You cannot edit enemy bot's code",
-					},
-					glyphMargin: false,
-					formatOnPaste: false,
-				}}
-			/>
+		<Panel
+			tabsHeadings="Enemy Bot Code"
+			roundedDir={roundedDir}
+			headingPos={headingPos}
+			className={className}
+		>
+			{showCode ? (
+				<WrappedEditor
+					value={resultCode}
+					options={{
+						readOnly: true,
+						readOnlyMessage: {
+							value: "You cannot edit enemy bot's code",
+						},
+						glyphMargin: false,
+						formatOnPaste: false,
+					}}
+				/>
+			) : (
+				<div className="w-hull h-full flex items-center justify-center text-xl">Hidden</div>
+			)}
 		</Panel>
 	);
 };

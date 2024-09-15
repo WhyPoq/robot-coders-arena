@@ -1,15 +1,15 @@
-    // pick tactic
-	if(shortMemory[0] == 0)
-		shortMemory[0] = Math.floor(Math.random() * 2) + 1;
+    const tacticCell = 0;
+	const moveCell = 1;
 	
-	if(shortMemory[0] == 1) {
-        let curMoveNum = shortMemory[1];
-		shortMemory[1]++;
+	// pick tactic
+	if(shortMemory[tacticCell] == 0)
+		shortMemory[tacticCell] = Math.floor(Math.random() * 2) + 1;
+	
+	const curMoveNum = shortMemory[moveCell];
+	shortMemory[moveCell]++;
+
+	if(shortMemory[tacticCell] == 1)
+		return [ATTACK, BLOCK, UPGRADE][curMoveNum % 3];
+	
+	if(shortMemory[tacticCell] == 2)
 		return [BLOCK, UPGRADE, ATTACK][curMoveNum % 3];
-	}
-	else if(shortMemory[0] == 2){
-		if(enemyPrevMove == -1){
-			return BLOCK;
-		}
-		return enemyPrevMove;
-	}

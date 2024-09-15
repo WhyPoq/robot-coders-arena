@@ -5,10 +5,10 @@ import { AnimationMixer } from "three";
 import { FBXLoader } from "three-stdlib";
 import * as THREE from "three";
 import { SkeletonUtils } from "three/examples/jsm/Addons.js";
-import { RobotAction } from "../types/RobotAction";
-import { RobotAnimationType } from "../types/RobotAnimationType";
-import { usePaceContext } from "../contexts/PaceContext";
-import { normalPaceInterval } from "../constants";
+import { RobotAction } from "../../types/RobotAction";
+import { RobotAnimationType } from "../../types/RobotAnimationType";
+import { usePaceContext } from "../../contexts/PaceContext";
+import { normalPaceInterval } from "../../constants";
 
 interface ModelWithAnimationsProps {
 	animationPaths?: string[][];
@@ -83,7 +83,7 @@ const RobotModel = ({
 		const bodyMaterial = new THREE.MeshStandardMaterial({
 			map: new THREE.TextureLoader().load("/robots/GradientC.png"),
 			metalness: 0.9, // 0.7
-			roughness: 0.3, // 0.5
+			roughness: 0.4, // 0.5
 		});
 		fbx.traverse((child) => {
 			if (child instanceof THREE.Mesh && child.isMesh) {

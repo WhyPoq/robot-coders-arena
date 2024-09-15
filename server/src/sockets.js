@@ -16,6 +16,7 @@ const socket_io_1 = require("socket.io");
 const compileBotCode_1 = __importDefault(require("./utils/compileBotCode"));
 const getEnemyBotData_1 = __importDefault(require("./enemyBots/getEnemyBotData"));
 const gameManager_1 = require("./gameManager");
+const extractCurLevel_1 = require("./utils/extractCurLevel");
 function initSockets(httpServer, sessionMiddleware, corsOptions) {
     const socketIO = new socket_io_1.Server(httpServer, {
         cors: corsOptions,
@@ -24,19 +25,24 @@ function initSockets(httpServer, sessionMiddleware, corsOptions) {
     socketIO.on("connection", (socket) => __awaiter(this, void 0, void 0, function* () {
         console.log(`user with id ${socket.id} connected`);
         const req = socket.request;
-        console.log("connected with level value", req.session.curLevel);
+        let newReq;
+        try {
+            newReq = yield (0, extractCurLevel_1.extractCurLevel)(req);
+        }
+        catch (err) {
+            console.log(err);
+            socket.disconnect();
+            return;
+        }
         let moveFn = null;
         let __output = [];
         let enemyMoveFn = null;
-        if (req.session.curLevel === undefined) {
-            req.session.curLevel = 0;
-        }
         socket.on("startFight", (_a) => __awaiter(this, [_a], void 0, function* ({ code }) {
             const compileResult = (0, compileBotCode_1.default)(code);
             if (compileResult.status === "success") {
                 moveFn = compileResult.fn;
                 __output = compileResult.__output;
-                const enemyDataResult = yield (0, getEnemyBotData_1.default)(req.session.curLevel);
+                const enemyDataResult = yield (0, getEnemyBotData_1.default)(newReq.curLevel);
                 if (enemyDataResult.result === "fail") {
                     return socket.emit("compileError", "Server error: " + enemyDataResult.message);
                 }
@@ -49,7 +55,7 @@ function initSockets(httpServer, sessionMiddleware, corsOptions) {
                 }
                 enemyMoveFn = enemyCompileResult.fn;
                 socket.emit("compiledSuccessfully");
-                setTimeout(() => (0, gameManager_1.startGame)(socket, moveFn, __output, enemyMoveFn, req), 1000);
+                setTimeout(() => (0, gameManager_1.startGame)(socket, moveFn, __output, enemyMoveFn, newReq), 1000);
             }
             else {
                 socket.emit("consoleLinesError", [compileResult.message]);
