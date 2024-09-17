@@ -6,6 +6,8 @@ import { startGame } from "./gameManager";
 import { RequestHandler } from "express";
 import { Request } from "express-serve-static-core";
 import { CurLevelRequest, extractCurLevel } from "./utils/extractCurLevel";
+import { FunctionFromSeclang } from "seclang/sandbox";
+import { SeclangFunction } from "seclang/core";
 
 function initSockets(httpServer: HttpServer, sessionMiddleware: RequestHandler, corsOptions: any) {
 	const socketIO = new Server(httpServer, {
@@ -27,15 +29,13 @@ function initSockets(httpServer: HttpServer, sessionMiddleware: RequestHandler, 
 			return;
 		}
 
-		let moveFn: Function | null = null;
-		let __output: string[] = [];
-		let enemyMoveFn: Function | null = null;
+		let moveFn: SeclangFunction | null = null;
+		let enemyMoveFn: SeclangFunction | null = null;
 
 		socket.on("startFight", async ({ code }: { code: string }) => {
 			const compileResult = compileBotCode(code);
 			if (compileResult.status === "success") {
 				moveFn = compileResult.fn;
-				__output = compileResult.__output;
 
 				const enemyDataResult = await getEnemyBotData(newReq.curLevel);
 				if (enemyDataResult.result === "fail") {
@@ -54,7 +54,7 @@ function initSockets(httpServer: HttpServer, sessionMiddleware: RequestHandler, 
 				enemyMoveFn = enemyCompileResult.fn;
 
 				socket.emit("compiledSuccessfully");
-				setTimeout(() => startGame(socket, moveFn!, __output, enemyMoveFn!, newReq), 1000);
+				setTimeout(() => startGame(socket, moveFn!, enemyMoveFn!, newReq), 1000);
 			} else {
 				socket.emit("consoleLinesError", [compileResult.message]);
 				socket.emit("compileError", compileResult.message);

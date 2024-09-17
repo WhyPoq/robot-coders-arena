@@ -1,6 +1,8 @@
-    const curMoveNumber = shortMemory[0];
-    shortMemory[0]++;
-    if(curMoveNumber % 2 == 0)
+    let curMoveNumber = shortMemory[0];
+    shortMemory[0] += 1;
+    if(curMoveNumber % 2 == 0) {
         return BLOCK
-    else
+    }
+    else {
         return ATTACK
+    }

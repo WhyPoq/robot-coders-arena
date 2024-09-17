@@ -16,11 +16,11 @@ interface IRestriction {
 
 function getWholeCode(innerCode: string) {
 	return `\
-const ATTACK = 1;
-const BLOCK = 2;
-const UPGRADE = 3;
+let ATTACK = 1;
+let BLOCK = 2;
+let UPGRADE = 3;
 
-function move(shortMemory, enemyPrevMove, stats, enemyStats, longMemory) {
+function move(shortMemory, enemyPrevMove, longMemory) {
 ${innerCode}
 }\
 `;

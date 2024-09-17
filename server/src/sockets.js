@@ -35,13 +35,11 @@ function initSockets(httpServer, sessionMiddleware, corsOptions) {
             return;
         }
         let moveFn = null;
-        let __output = [];
         let enemyMoveFn = null;
         socket.on("startFight", (_a) => __awaiter(this, [_a], void 0, function* ({ code }) {
             const compileResult = (0, compileBotCode_1.default)(code);
             if (compileResult.status === "success") {
                 moveFn = compileResult.fn;
-                __output = compileResult.__output;
                 const enemyDataResult = yield (0, getEnemyBotData_1.default)(newReq.curLevel);
                 if (enemyDataResult.result === "fail") {
                     return socket.emit("compileError", "Server error: " + enemyDataResult.message);
@@ -55,7 +53,7 @@ function initSockets(httpServer, sessionMiddleware, corsOptions) {
                 }
                 enemyMoveFn = enemyCompileResult.fn;
                 socket.emit("compiledSuccessfully");
-                setTimeout(() => (0, gameManager_1.startGame)(socket, moveFn, __output, enemyMoveFn, newReq), 1000);
+                setTimeout(() => (0, gameManager_1.startGame)(socket, moveFn, enemyMoveFn, newReq), 1000);
             }
             else {
                 socket.emit("consoleLinesError", [compileResult.message]);

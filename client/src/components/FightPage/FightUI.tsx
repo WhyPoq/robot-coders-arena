@@ -71,7 +71,7 @@ const FightUI = ({
 	return (
 		<div className="h-full flex flex-col justify-between items-center relative">
 			<div className="w-full flex flex-col items-center">
-				<div className="flex justify-between items-start w-full">
+				<div className="flex justify-between items-start w-full pointer-events-children">
 					<BotInfo
 						side={"left"}
 						show={show}
@@ -91,7 +91,7 @@ const FightUI = ({
 				<div
 					className={[
 						"mt-10 p-8 rounded bg-black bg-opacity-80 transition-opacity duration-500 flex flex-col items-center gap-4",
-						showWinner === "" ? "opacity-0" : "opacity-100 pointer-events-auto",
+						showWinner === "" ? "opacity-0" : "opacity-100 pointer-events-children",
 					].join(" ")}
 				>
 					<p className="font-bold text-3xl text-center">{showWinnerBefore}</p>
@@ -119,7 +119,7 @@ const FightUI = ({
 			</div>
 			<div
 				className={[
-					"w-1/2 basis-1/5 pointer-events-auto transition-transform duration-1000",
+					"w-1/2 basis-1/5 transition-transform duration-1000 pointer-events-children",
 					show ? "delay-300 translate-y-0" : "translate-y-[110%]",
 				].join(" ")}
 			>

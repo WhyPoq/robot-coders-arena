@@ -5,6 +5,8 @@ import BotStats from "./types/BotStats";
 import { RobotAction } from "./types/RobotAction";
 import { CurLevelRequest } from "./utils/extractCurLevel";
 import enemyBotsData from "./enemyBots/enemyBotsData.json";
+import { FunctionFromSeclang, sandboxRun, seclangValueToJS } from "seclang/sandbox";
+import { SeclangFunction, SeclangList, SeclangStdout, SeclangValue } from "seclang/core";
 
 const MAX_STEPS_COUNT = 100;
 const NORMAL_PACE_INTERVAL = 2500;
@@ -12,9 +14,8 @@ const FAST_PACE_INTERVAL = 250;
 
 export async function startGame(
 	socket: Socket,
-	moveFn: Function,
-	__output: string[],
-	enemyMoveFn: Function,
+	moveFn: SeclangFunction,
+	enemyMoveFn: SeclangFunction,
 	req: CurLevelRequest
 ) {
 	let gameStepInterval: NodeJS.Timeout | undefined = undefined;
@@ -48,22 +49,53 @@ export async function startGame(
 		}
 	}
 
-	function getMove(fn: Function, botInfo: BotInfo): RobotAction {
+	function getMove(fn: SeclangFunction, botInfo: BotInfo): [RobotAction, string[]] {
 		try {
-			const returnVal = fn(
-				botInfo.shortMemory,
-				botInfo.enemyPrevMove,
-				botInfo.stats,
-				botInfo.enemyStats,
-				botInfo.longMemory
+			const codeCompileResult = sandboxRun(
+				"move(shortMemory, enemyPrevMove, longMemory)",
+				{ maxInstructions: 1000000, maxVariables: 1000 },
+				10,
+				"<robot_code>",
+				{
+					ATTACK: 1,
+					BLOCK: 2,
+					UPGRADE: 3,
+					move: fn,
+					shortMemory: botInfo.shortMemory,
+					enemyPrevMove: botInfo.enemyPrevMove,
+					longMemory: botInfo.longMemory,
+				}
 			);
+
+			const returnVal = seclangValueToJS(codeCompileResult.result);
+
+			function forceSeclangNumsToJsArray(jsArray: number[], seclangNums: SeclangList) {
+				const convertedNums = seclangValueToJS(seclangNums);
+				for (let i = 0; i < jsArray.length; i += 1) {
+					if (i < convertedNums.length && typeof convertedNums[i] === "number") {
+						jsArray[i] = convertedNums[i] as number;
+					} else {
+						jsArray[i] = 0;
+					}
+				}
+			}
+
+			forceSeclangNumsToJsArray(
+				botInfo.shortMemory,
+				codeCompileResult.globalSymbols["shortMemory"] as SeclangList
+			);
+			forceSeclangNumsToJsArray(
+				botInfo.longMemory,
+				codeCompileResult.globalSymbols["longMemory"] as SeclangList
+			);
+
 			if (typeof returnVal !== "number" || returnVal < 0 || returnVal >= RobotAction.Length)
-				return RobotAction.Idle;
-			return returnVal as RobotAction;
+				return [RobotAction.Idle, codeCompileResult.stdout];
+			return [returnVal as RobotAction, codeCompileResult.stdout];
 		} catch (err) {
 			const message = err instanceof Error ? err.message : String(err);
 			socket.emit("consoleLinesError", [message]);
-			return RobotAction.Idle;
+			return [RobotAction.Idle, []];
 		}
 	}
 
@@ -79,15 +111,16 @@ export async function startGame(
 			return;
 		}
 
-		let botMove = getMove(moveFn!, playerBotInfo);
-		if (__output.length > 0) {
-			socket.emit("consoleLines", __output);
-			while (__output.length > 0) __output.pop();
+		let [botMove, stdout] = getMove(moveFn!, playerBotInfo);
+		if (stdout.length > 0) {
+			socket.emit("consoleLines", stdout);
 		}
-		let enemyMove = getMove(enemyMoveFn!, enemyBotInfo);
+		let [enemyMove, _enemyStdout] = getMove(enemyMoveFn!, enemyBotInfo);
 
-		botMove = updateBot(botMove, enemyMove, playerStats, enemyStats);
-		enemyMove = updateBot(enemyMove, botMove, enemyStats, playerStats);
+		const oldPlayerStats = playerStats.copy();
+		const oldEnemyStats = enemyStats.copy();
+		botMove = updateBot(botMove, enemyMove, playerStats, oldEnemyStats);
+		enemyMove = updateBot(enemyMove, botMove, enemyStats, oldPlayerStats);
 
 		playerBotInfo.enemyPrevMove = enemyMove;
 		enemyBotInfo.enemyPrevMove = botMove;
@@ -156,7 +189,7 @@ export async function startGame(
 	async function endGame(roundWinner: string) {
 		if (playerWins === 2) {
 			let completedAllLevels = false;
-			if (req.curLevel < enemyBotsData.length) {
+			if (req.curLevel + 1 < enemyBotsData.length) {
 				try {
 					await req.setCurLevel(req.curLevel + 1);
 				} catch (err) {

@@ -7,6 +7,13 @@ class BotStats {
         this.dizzy = 0;
         this.reset();
     }
+    copy() {
+        const newStats = new BotStats();
+        newStats.health = this.health;
+        newStats.strength = this.strength;
+        newStats.dizzy = this.dizzy;
+        return newStats;
+    }
     reset() {
         this.health = 30;
         this.strength = 1;

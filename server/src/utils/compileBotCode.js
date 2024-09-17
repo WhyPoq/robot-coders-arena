@@ -1,31 +1,36 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const vm_1 = __importDefault(require("vm"));
+const core_1 = require("seclang/core");
+const sandbox_1 = require("seclang/sandbox");
 function compileBotCode(code) {
-    code = code.replace(/console\.log\((.*)\)/g, "__output.push(JSON.stringify($1))");
+    const wholeCode = `\
+	let IDLE = 0;
+	let ATTACK = 1;
+	let BLOCK = 2;
+	let UPGRADE = 3;
+	
+	function (shortMemory, enemyPrevMove, longMemory) {
+		${code}
+	}
+`;
     try {
-        const context = {
-            fn: undefined,
-            __output: [],
-        };
-        vm_1.default.createContext(context);
-        vm_1.default.runInContext(`
-            const IDLE = 0;
-            const ATTACK = 1;
-            const BLOCK = 2;
-            const UPGRADE = 3;
-            
-            fn = (shortMemory, enemyPrevMove, stats, enemyStats, longMemory) => {
-                ${code}
-            }
-        `, context);
-        return { status: "success", fn: context.fn, __output: context.__output };
+        const codeCompileResult = (0, sandbox_1.sandboxRun)(wholeCode, { maxInstructions: 1000000, maxVariables: 1000 }, 10, "<robot_code>");
+        const compiledFunction = codeCompileResult.result;
+        return { status: "success", fn: compiledFunction };
     }
     catch (err) {
-        const message = err instanceof Error ? err.message : String(err);
+        let message = "";
+        if (err instanceof core_1.InstructionLimitReachedError) {
+            message = "Too many instruction";
+        }
+        else if (err instanceof core_1.VarsLimitReachedError) {
+            message = "Too many variables";
+        }
+        else if (err instanceof sandbox_1.CodeError) {
+            message = "\n" + err.message;
+        }
+        else
+            throw err;
         return { status: "fail", message };
     }
 }

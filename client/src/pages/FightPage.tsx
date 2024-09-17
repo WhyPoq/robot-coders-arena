@@ -139,18 +139,31 @@ const FightPage = () => {
 	]);
 
 	useEffect(() => {
+		function mergeLines(prevLines: ConsoleLine[], newLines: ConsoleLine[]) {
+			const maxConsoleLines = 50;
+			const newValues = [];
+			const prevLen = Math.min(prevLines.length, maxConsoleLines - newLines.length);
+			const newLen = Math.min(maxConsoleLines, newLines.length);
+
+			for (let i = 0; i < prevLen; i++)
+				newValues.push(prevLines[prevLines.length - prevLen + i]);
+			for (let i = 0; i < newLen; i++) newValues.push(newLines[newLines.length - newLen + i]);
+
+			return newValues;
+		}
+
 		function addConsoleLines(logLines: string[]) {
 			const newLines: ConsoleLine[] = logLines.map((logLine) => {
 				return { type: "log", value: logLine };
 			});
-			setLines((prev) => [...prev, ...newLines]);
+			setLines((prev) => mergeLines(prev, newLines));
 		}
 
 		function addConsoleLinesError(errorLines: string[]) {
 			const newLines: ConsoleLine[] = errorLines.map((errorLine) => {
 				return { type: "error", value: errorLine };
 			});
-			setLines((prev) => [...prev, ...newLines]);
+			setLines((prev) => mergeLines(prev, newLines));
 		}
 
 		socket.on("consoleLines", addConsoleLines);
@@ -245,6 +258,7 @@ const FightPage = () => {
 
 	useEffect(() => {
 		return () => {
+			stopGame();
 			if (socket.connected) socket.disconnect();
 		};
 	}, []);

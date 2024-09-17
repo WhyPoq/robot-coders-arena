@@ -5,10 +5,10 @@ import { useEffect, useRef } from "react";
 interface ConsoleProps {
 	roundedDir: "left" | "right" | "all";
 	headingPos: "left" | "right";
-	className: string;
+	className?: string;
 }
 
-const Console = ({ roundedDir, headingPos, className }: ConsoleProps) => {
+const Console = ({ roundedDir, headingPos, className = "" }: ConsoleProps) => {
 	let { lines } = useConsoleContext();
 	const divRef = useRef<HTMLDivElement>(null);
 
@@ -17,9 +17,11 @@ const Console = ({ roundedDir, headingPos, className }: ConsoleProps) => {
 	}
 
 	useEffect(() => {
-		if (divRef.current !== null) {
-			divRef.current.scrollTo(0, divRef.current.scrollHeight);
-		}
+		setTimeout(() => {
+			if (divRef.current !== null) {
+				divRef.current.scrollTo(0, divRef.current.scrollHeight);
+			}
+		}, 0);
 	}, [lines]);
 
 	return (

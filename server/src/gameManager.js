@@ -18,10 +18,11 @@ const updateBot_1 = __importDefault(require("./utils/updateBot"));
 const BotStats_1 = __importDefault(require("./types/BotStats"));
 const RobotAction_1 = require("./types/RobotAction");
 const enemyBotsData_json_1 = __importDefault(require("./enemyBots/enemyBotsData.json"));
+const sandbox_1 = require("seclang/sandbox");
 const MAX_STEPS_COUNT = 100;
 const NORMAL_PACE_INTERVAL = 2500;
 const FAST_PACE_INTERVAL = 250;
-function startGame(socket, moveFn, __output, enemyMoveFn, req) {
+function startGame(socket, moveFn, enemyMoveFn, req) {
     return __awaiter(this, void 0, void 0, function* () {
         let gameStepInterval = undefined;
         const playerStats = new BotStats_1.default();
@@ -50,15 +51,37 @@ function startGame(socket, moveFn, __output, enemyMoveFn, req) {
         }
         function getMove(fn, botInfo) {
             try {
-                const returnVal = fn(botInfo.shortMemory, botInfo.enemyPrevMove, botInfo.stats, botInfo.enemyStats, botInfo.longMemory);
+                const codeCompileResult = (0, sandbox_1.sandboxRun)("move(shortMemory, enemyPrevMove, longMemory)", { maxInstructions: 1000000, maxVariables: 1000 }, 10, "<robot_code>", {
+                    ATTACK: 1,
+                    BLOCK: 2,
+                    UPGRADE: 3,
+                    move: fn,
+                    shortMemory: botInfo.shortMemory,
+                    enemyPrevMove: botInfo.enemyPrevMove,
+                    longMemory: botInfo.longMemory,
+                });
+                const returnVal = (0, sandbox_1.seclangValueToJS)(codeCompileResult.result);
+                function forceSeclangNumsToJsArray(jsArray, seclangNums) {
+                    const convertedNums = (0, sandbox_1.seclangValueToJS)(seclangNums);
+                    for (let i = 0; i < jsArray.length; i += 1) {
+                        if (i < convertedNums.length && typeof convertedNums[i] === "number") {
+                            jsArray[i] = convertedNums[i];
+                        }
+                        else {
+                            jsArray[i] = 0;
+                        }
+                    }
+                }
+                forceSeclangNumsToJsArray(botInfo.shortMemory, codeCompileResult.globalSymbols["shortMemory"]);
+                forceSeclangNumsToJsArray(botInfo.longMemory, codeCompileResult.globalSymbols["longMemory"]);
                 if (typeof returnVal !== "number" || returnVal < 0 || returnVal >= RobotAction_1.RobotAction.Length)
-                    return RobotAction_1.RobotAction.Idle;
-                return returnVal;
+                    return [RobotAction_1.RobotAction.Idle, codeCompileResult.stdout];
+                return [returnVal, codeCompileResult.stdout];
             }
             catch (err) {
                 const message = err instanceof Error ? err.message : String(err);
                 socket.emit("consoleLinesError", [message]);
-                return RobotAction_1.RobotAction.Idle;
+                return [RobotAction_1.RobotAction.Idle, []];
             }
         }
         function gameStep() {
@@ -71,15 +94,15 @@ function startGame(socket, moveFn, __output, enemyMoveFn, req) {
                 endRound();
                 return;
             }
-            let botMove = getMove(moveFn, playerBotInfo);
-            if (__output.length > 0) {
-                socket.emit("consoleLines", __output);
-                while (__output.length > 0)
-                    __output.pop();
+            let [botMove, stdout] = getMove(moveFn, playerBotInfo);
+            if (stdout.length > 0) {
+                socket.emit("consoleLines", stdout);
             }
-            let enemyMove = getMove(enemyMoveFn, enemyBotInfo);
-            botMove = (0, updateBot_1.default)(botMove, enemyMove, playerStats, enemyStats);
-            enemyMove = (0, updateBot_1.default)(enemyMove, botMove, enemyStats, playerStats);
+            let [enemyMove, _enemyStdout] = getMove(enemyMoveFn, enemyBotInfo);
+            const oldPlayerStats = playerStats.copy();
+            const oldEnemyStats = enemyStats.copy();
+            botMove = (0, updateBot_1.default)(botMove, enemyMove, playerStats, oldEnemyStats);
+            enemyMove = (0, updateBot_1.default)(enemyMove, botMove, enemyStats, oldPlayerStats);
             playerBotInfo.enemyPrevMove = enemyMove;
             enemyBotInfo.enemyPrevMove = botMove;
             socket.emit("botsActions", botMove, enemyMove, playerBotInfo.stats, enemyBotInfo.stats);
@@ -139,7 +162,7 @@ function startGame(socket, moveFn, __output, enemyMoveFn, req) {
             return __awaiter(this, void 0, void 0, function* () {
                 if (playerWins === 2) {
                     let completedAllLevels = false;
-                    if (req.curLevel < enemyBotsData_json_1.default.length) {
+                    if (req.curLevel + 1 < enemyBotsData_json_1.default.length) {
                         try {
                             yield req.setCurLevel(req.curLevel + 1);
                         }

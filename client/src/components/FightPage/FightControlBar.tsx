@@ -37,7 +37,7 @@ const FightControlBar = ({ isCodingPhase, toggleStartFight, isPending }: FightCo
 	return (
 		<div className="flex justify-center h-10 mt-2 no-pointer-events-current">
 			<div className="flex items-center -translate-x-[80px] no-pointer-events-current">
-				<div className="w-40 flex justify-end">
+				<div className="w-40 flex justify-end pointer-events-children">
 					<NormalButton
 						size="small"
 						className={[

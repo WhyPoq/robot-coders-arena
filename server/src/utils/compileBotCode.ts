@@ -1,9 +1,10 @@
-import vm from "vm";
+import { InstructionLimitReachedError, SeclangFunction, VarsLimitReachedError } from "seclang/core";
+import { CodeError, sandboxRun, seclangValueToJS } from "seclang/sandbox";
+import { FunctionFromSeclang } from "seclang/sandbox";
 
 interface CompileResultSuccess {
 	status: "success";
-	fn: Function;
-	__output: string[];
+	fn: SeclangFunction;
 }
 
 interface CompileResultFail {
@@ -14,31 +15,37 @@ interface CompileResultFail {
 type CompileResult = CompileResultSuccess | CompileResultFail;
 
 function compileBotCode(code: string): CompileResult {
-	code = code.replace(/console\.log\((.*)\)/g, "__output.push(JSON.stringify($1))");
+	const wholeCode = `\
+	let IDLE = 0;
+	let ATTACK = 1;
+	let BLOCK = 2;
+	let UPGRADE = 3;
+	
+	function (shortMemory, enemyPrevMove, longMemory) {
+		${code}
+	}
+`;
 
 	try {
-		const context: { fn: Function | undefined; __output: string[] } = {
-			fn: undefined,
-			__output: [],
-		};
-		vm.createContext(context);
-
-		vm.runInContext(
-			`
-            const IDLE = 0;
-            const ATTACK = 1;
-            const BLOCK = 2;
-            const UPGRADE = 3;
-            
-            fn = (shortMemory, enemyPrevMove, stats, enemyStats, longMemory) => {
-                ${code}
-            }
-        `,
-			context
+		const codeCompileResult = sandboxRun(
+			wholeCode,
+			{ maxInstructions: 1000000, maxVariables: 1000 },
+			10,
+			"<robot_code>"
 		);
-		return { status: "success", fn: context.fn!, __output: context.__output };
+
+		const compiledFunction = codeCompileResult.result as SeclangFunction;
+		return { status: "success", fn: compiledFunction };
 	} catch (err) {
-		const message = err instanceof Error ? err.message : String(err);
+		let message = "";
+		if (err instanceof InstructionLimitReachedError) {
+			message = "Too many instruction";
+		} else if (err instanceof VarsLimitReachedError) {
+			message = "Too many variables";
+		} else if (err instanceof CodeError) {
+			message = "\n" + err.message;
+		} else throw err;
+
 		return { status: "fail", message };
 	}
 }

@@ -8,19 +8,19 @@ import { useEnemyInfoContext } from "../../contexts/EnemyInfoContext";
 interface CodeEditorProps {
 	roundedDir: "left" | "right";
 	headingPos: "left" | "right";
-	className: string;
+	className?: string;
 }
 
-const EnemyCode = ({ roundedDir, headingPos, className }: CodeEditorProps) => {
+const EnemyCode = ({ roundedDir, headingPos, className = "" }: CodeEditorProps) => {
 	const { code, setCode, setDescription } = useEnemyInfoContext();
 	const [showCode, setShowCode] = useState(true);
 
 	const resultCode = `\
-const ATTACK = 1;
-const BLOCK = 2;
-const UPGRADE = 3;
+let ATTACK = 1;
+let BLOCK = 2;
+let UPGRADE = 3;
 
-function move(shortMemory, enemyPrevMove, stats, enemyStats, longMemory) {
+function move(shortMemory, enemyPrevMove, longMemory) {
 ${code}
 }\
 	`;
