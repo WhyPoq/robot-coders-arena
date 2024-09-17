@@ -9,6 +9,7 @@ import authenticationRouter from "./routes/authentication";
 import SessionUser from "./types/sessionUser";
 import connectDB from "./connectDB";
 import getUserInfoRouter from "./routes/getUserInfo";
+import path from "node:path";
 
 declare module "express-session" {
 	interface SessionData {
@@ -18,7 +19,7 @@ declare module "express-session" {
 }
 
 dotenv.config();
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 
 const app = express();
 const httpServer = createServer(app);
@@ -49,16 +50,16 @@ const sessionMiddleware = session({
 
 app.use(sessionMiddleware);
 
-app.get("/", (req, res) => {
-	res.json({
-		message: "Hello from server",
-	});
-});
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/enemyBots", enemyBotsRouter);
 app.use("/", authenticationRouter);
 app.use("/userinfo", getUserInfoRouter);
 
 initSockets(httpServer, sessionMiddleware, corsOptions);
+
+app.get("*", (req, res) => {
+	res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 httpServer.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

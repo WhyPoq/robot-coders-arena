@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useUserContext } from "../contexts/UserContext";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const MyBotsPage = () => {
 	const { username } = useUserContext();
@@ -17,16 +17,8 @@ const MyBotsPage = () => {
 	}
 
 	return (
-		<div className="h-full relative bg-vscode-editor-background text-white font-normal">
-			<h1>My Bots</h1>
-			<div>
-				<div>
-					<Link to="/mybots/random">Bot 1</Link>
-				</div>
-				<div>
-					<p>Bot 2</p>
-				</div>
-			</div>
+		<div className="h-full relative bg-vscode-editor-background text-white font-normal p-4">
+			<h1>My bots (Not yet implemented)</h1>
 		</div>
 	);
 };

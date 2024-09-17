@@ -9,11 +9,9 @@ interface ConunterDotProps {
 
 const CounterDot = ({ innerShape }: ConunterDotProps) => {
 	let icon = "";
-	let iconColor = "white";
 	switch (innerShape) {
 		case "circle":
 			icon = circleIcon;
-			iconColor = "";
 			break;
 		case "square":
 			icon = squareIcon;
