@@ -1,0 +1,27 @@
+[
+    {
+        "descriptionFile": "level1Description.html",
+        "codeFile": "level1.txt",
+        "showCode": true
+    },
+    {
+        "descriptionFile": "level2Description.html",
+        "codeFile": "level2.txt",
+        "showCode": true
+    },
+    {
+        "descriptionFile": "level3Description.html",
+        "codeFile": "level3.txt",
+        "showCode": true
+    },
+    {
+        "descriptionFile": "level4Description.html",
+        "codeFile": "level4.txt",
+        "showCode": true
+    },
+    {
+        "descriptionFile": "level5Description.html",
+        "codeFile": "level5.txt",
+        "showCode": false
+    }
+]

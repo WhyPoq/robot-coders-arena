@@ -1,0 +1,18 @@
+    let tacticCell = 0;
+	let moveCell = 1;
+	
+	// pick tactic
+	if(shortMemory[tacticCell] == 0) {
+		shortMemory[tacticCell] = floor(random() * 2) + 1;
+	}
+	
+	let curMoveNum = shortMemory[moveCell];
+	shortMemory[moveCell] += 1;
+
+	if(shortMemory[tacticCell] == 1) {
+		return [ATTACK, BLOCK, UPGRADE][curMoveNum % 3];
+	}
+	
+	if(shortMemory[tacticCell] == 2) {
+		return [BLOCK, UPGRADE, ATTACK][curMoveNum % 3];
+	}
