@@ -14,7 +14,7 @@ RUN npm install
 COPY server ./
 
 # Copy the React build from the first stage to the backend's public directory
-COPY --from=build /app/client/dist ./public
+COPY --from=build /app/client/dist ./server/public
 
 # Install TypeScript globally and compile the TypeScript code
 RUN npm install -g typescript
