@@ -28,7 +28,7 @@ connectDB(process.env.DB_URI);
 app.use(express.json());
 
 const corsOptions = {
-	origin: ["*"],
+	origin: "*",
 	credentials: true,
 };
 
