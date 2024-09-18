@@ -28,7 +28,7 @@ connectDB(process.env.DB_URI);
 app.use(express.json());
 
 const corsOptions = {
-	origin: ["http://localhost:5173"],
+	origin: ["*"],
 	credentials: true,
 };
 
@@ -48,13 +48,13 @@ const sessionMiddleware = session({
 
 app.use(sessionMiddleware);
 
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "..", "public")));
 
 initSockets(httpServer, sessionMiddleware, corsOptions);
 
 app.use("/api", apiRouter);
-// app.get("*", (req, res) => {
-// 	res.sendFile(path.join(__dirname, "public", "index.html"));
-// });
+app.get("*", (req, res) => {
+	res.sendFile(path.join(__dirname, "..", "public", "index.html"));
+});
 
 httpServer.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

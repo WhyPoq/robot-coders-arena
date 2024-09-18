@@ -21,7 +21,7 @@ if (process.env.DB_URI === undefined)
 (0, connectDB_1.default)(process.env.DB_URI);
 app.use(express_1.default.json());
 const corsOptions = {
-    origin: ["http://localhost:5173"],
+    origin: ["*"],
     credentials: true,
 };
 app.use((0, cors_1.default)(corsOptions));
@@ -37,11 +37,11 @@ const sessionMiddleware = (0, express_session_1.default)({
     },
 });
 app.use(sessionMiddleware);
-app.use(express_1.default.static(node_path_1.default.join(__dirname, "public")));
+app.use(express_1.default.static(node_path_1.default.join(__dirname, "..", "public")));
 (0, sockets_1.default)(httpServer, sessionMiddleware, corsOptions);
 app.use("/api", api_1.default);
-// app.get("*", (req, res) => {
-// 	res.sendFile(path.join(__dirname, "public", "index.html"));
-// });
+app.get("*", (req, res) => {
+    res.sendFile(node_path_1.default.join(__dirname, "..", "public", "index.html"));
+});
 httpServer.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
 //# sourceMappingURL=server.js.map
