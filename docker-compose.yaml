@@ -5,7 +5,9 @@ services:
     ports:
       - '4000:4000'
     environment:
-      - NODE_ENV=production
+      - DEVELOPMENT=false
+      - SESSIONS_SECRET=***
+      - DB_URI=***
     volumes:
       - ./server:/app
     depends_on:
