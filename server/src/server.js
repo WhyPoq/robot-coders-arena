@@ -21,7 +21,7 @@ if (process.env.DB_URI === undefined)
 (0, connectDB_1.default)(process.env.DB_URI);
 app.use(express_1.default.json());
 const corsOptions = {
-    origin: ["*"],
+    origin: "*",
     credentials: true,
 };
 app.use((0, cors_1.default)(corsOptions));
