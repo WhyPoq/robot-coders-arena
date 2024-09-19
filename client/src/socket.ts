@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
-import { serverUrl } from "./constants";
+import { socketUrl } from "./constants";
 
-export const socket = io(serverUrl, {
+export const socket = io(socketUrl, {
 	autoConnect: false,
 	withCredentials: true,
 });
