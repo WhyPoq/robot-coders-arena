@@ -80,7 +80,6 @@ const LogInPage = () => {
 							} else {
 								navigate("/");
 							}
-							navigate(-1);
 						}, 100);
 					}
 				} catch (e) {
