@@ -96,7 +96,6 @@ const SignUpPage = () => {
 							} else {
 								navigate("/");
 							}
-							navigate(-1);
 						});
 					}
 				} catch (e) {

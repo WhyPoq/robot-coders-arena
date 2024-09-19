@@ -16,6 +16,7 @@ exports.extractCurLevel = void 0;
 const user_1 = __importDefault(require("../models/user"));
 function extractCurLevel(req) {
     return __awaiter(this, void 0, void 0, function* () {
+        var _a;
         let curLevel;
         if (req.session.user) {
             try {
@@ -32,7 +33,7 @@ function extractCurLevel(req) {
             if (req.session.curLevel === undefined) {
                 req.session.curLevel = 0;
             }
-            curLevel = req.session.curLevel;
+            curLevel = (_a = req.session.curLevel) !== null && _a !== void 0 ? _a : 0;
         }
         let setCurLevel = (newCurLevel) => __awaiter(this, void 0, void 0, function* () {
             if (req.session.user) {

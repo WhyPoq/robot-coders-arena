@@ -25,7 +25,7 @@ export async function extractCurLevel(req: Request) {
 		if (req.session.curLevel === undefined) {
 			req.session.curLevel = 0;
 		}
-		curLevel = req.session.curLevel;
+		curLevel = req.session.curLevel ?? 0;
 	}
 
 	let setCurLevel = async (newCurLevel: number) => {

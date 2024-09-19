@@ -29,6 +29,7 @@ const sessionMiddleware = (0, express_session_1.default)({
     secret: process.env.SESSIONS_SECRET,
     resave: false,
     saveUninitialized: false,
+    proxy: process.env.DEVELOPMENT === "true" ? false : true, // false  - for development, true - for release
     cookie: {
         secure: process.env.DEVELOPMENT === "true" ? false : true, // false  - for development, true - for release
         httpOnly: true,
