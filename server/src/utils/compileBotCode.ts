@@ -16,14 +16,13 @@ type CompileResult = CompileResultSuccess | CompileResultFail;
 
 function compileBotCode(code: string): CompileResult {
 	const wholeCode = `\
-	let IDLE = 0;
-	let ATTACK = 1;
-	let BLOCK = 2;
-	let UPGRADE = 3;
-	
-	function (shortMemory, enemyPrevMove, longMemory) {
-		${code}
-	}
+let ATTACK = 1;
+let BLOCK = 2;
+let UPGRADE = 3;
+
+function (shortMemory, enemyPrevMove, longMemory) {
+${code}
+}
 `;
 
 	try {

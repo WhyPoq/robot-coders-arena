@@ -4,14 +4,13 @@ const core_1 = require("seclang/core");
 const sandbox_1 = require("seclang/sandbox");
 function compileBotCode(code) {
     const wholeCode = `\
-	let IDLE = 0;
-	let ATTACK = 1;
-	let BLOCK = 2;
-	let UPGRADE = 3;
-	
-	function (shortMemory, enemyPrevMove, longMemory) {
-		${code}
-	}
+let ATTACK = 1;
+let BLOCK = 2;
+let UPGRADE = 3;
+
+function (shortMemory, enemyPrevMove, longMemory) {
+${code}
+}
 `;
     try {
         const codeCompileResult = (0, sandbox_1.sandboxRun)(wholeCode, { maxInstructions: 1000000, maxVariables: 1000 }, 10, "<robot_code>");
